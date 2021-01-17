@@ -1,0 +1,343 @@
+<div class="layout-holder__content__body">
+    <div class="layout-holder__content__body__form">
+        <div class="layout-holder__content__body__form__head">
+            <h1 class="layout-holder__content__body__form__head__title">Şəhid ailələri və yaralılarla görüş
+            </h1>
+        </div>
+        <div class="layout-holder__content__body__form__holder">
+          <form [formGroup]='martyrForm'>
+            <div class="layout-holder__content__body__form__holder__section">
+              <h2 class="layout-holder__content__body__form__holder__section__title">Şəhidin şəxsi
+                  məlumatları</h2>
+              <div class="layout-holder__content__body__form__holder__section__area">
+                  <div class="row">
+                      <div class="col-lg-6">
+                          <div class="input-wrapper m-b-20">
+                              <label class="input-label">Ad</label>
+                              <input type="text" class="input-control" placeholder="Ad" formControlName='name'>
+                          </div>
+                      </div>
+                      <div class="col-lg-6">
+                          <div class="input-wrapper m-b-20">
+                              <label class="input-label">Soyad</label>
+                              <input type="text" class="input-control" placeholder="Soyad" formControlName='surname'>
+                          </div>
+                      </div>
+                      <div class="col-lg-6">
+                          <div class="input-wrapper m-b-20">
+                              <label class="input-label">Ata adı</label>
+                              <input type="text" class="input-control" placeholder="Ata adı" formControlName='fathername'>
+                          </div>
+                      </div>
+                      <div class="col-lg-6">
+                          <div class="input-wrapper m-b-20">
+                              <label class="input-label">Doğum tarixi</label>
+                              <mat-form-field appearance="fill" class="input-control">
+                                <input matInput [matDatepicker]="dp3" (click)="dp3.open()" (keydown)="false"
+                                  placeholder="Doğum tarixi" formControlName='birthdate' (dateChange)='changeDateFormat($event.target.value, 1)'>
+                                <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+                                <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+                              </mat-form-field>
+                          </div>
+                      </div>
+                      <div class="col-lg-6">
+                          <div class="input-wrapper m-b-20">
+                              <label class="input-label">Yaşadığı ünvan</label>
+                              <input type="text" class="input-control" placeholder="Yaşadığı ünvan" formControlName='familyAddress'>
+                          </div>
+                      </div>
+                      <div class="col-lg-6">
+                          <div class="input-wrapper m-b-20">
+                              <label class="input-label">Əlaqə vasitəsi</label>
+                              <input type="text" class="input-control" placeholder="Əlaqə vasitəsi" formControlName='contactInfo'>
+                          </div>
+                      </div>
+                      <div class="col-lg-6">
+                          <div class="input-wrapper m-b-20">
+                              <label class="input-label">FİN nömrə və ya hərbi biletin nömrəsi</label>
+                              <input type="text" class="input-control" placeholder="Nömrəni qeyd ediniz" formControlName='fin'>
+                          </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                          <div class="input-wrapper has-icon m-b-20">
+                              <label class="input-label">Şəhid olduğu rayon</label>
+                              <div class="input-wrapper">
+                                  <select class="input-control" formControlName='regionId'>
+                                      <option selected="selected" value="0" disabled="disabled">Seçiniz</option>
+                                      <option *ngFor="let region of regions" [value]="region.id">{{region.name}}</option>
+                                  </select>
+                                  <span class="input-icon icon-chevron-down"></span>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-lg-6">
+                          <div class="input-wrapper m-b-20">
+                              <label class="input-label">Şəhid olduğu tarix</label>
+                              <mat-form-field appearance="fill" class="input-control">
+                                <input matInput [matDatepicker]="dp4" placeholder="Şəhid olduğu tarix" (click)="dp4.open()" (keydown)="false"
+                                  formControlName='dateOfMartyrdomOrVeteran' (dateChange)='changeDateFormat($event.target.value, 4)'>
+                                <mat-datepicker-toggle matSuffix [for]="dp4"></mat-datepicker-toggle>
+                                <mat-datepicker #dp4 disabled="false"></mat-datepicker>
+                              </mat-form-field>
+                          </div>
+                      </div>
+                      <div class="col-lg-6">
+                          <div class="input-wrapper m-b-20 ">
+                              <label for="" class="input-label">Şəxsiyyət vəsiqəsinin və ya hərbi biletin
+                                  şəkli</label>
+                              <div class="fileupload">
+                                  <span class="fileupload-placeholder">Fayl</span>
+                                  <label for="file"
+                                      class="fileupload-button btn btn-small btn-primary">Yüklə<input
+                                          id="file" type="file" (change)='documentUpload($event, 1)'></label>
+                              </div>
+                              <div class="fileupload-list" *ngIf="controls.identityPhotoId.value">
+                                  <div class="fileupload-file">
+                                      <span class="fileupload-file__remove icon-times" (click)="removePhoto(1)"></span>
+                                      <span class="fileupload-file__name">photo</span>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+            </div>
+            <div class="layout-holder__content__body__form__holder__section">
+                <h2 class="layout-holder__content__body__form__holder__section__title">Şəhidin dövlət
+                    tərəfindən təltif, orden, medal və ya fəxri ad alıbsa aldığı tarix</h2>
+                <div class="layout-holder__content__body__form__holder__section__area">
+                    <div class="layout-holder__content__body__form__holder__section__area__block">
+                        <div class="layout-holder__content__body__form__holder__section__area__block__list" formArrayName='rewards'>
+                            <div *ngFor="let reward of rewards.controls; let i=index"
+                                class="layout-holder__content__body__form__holder__section__area__block__list__item">
+                                <div [formGroupName]='i'>
+                                  <div
+                                      class="layout-holder__content__body__form__holder__section__area__block__list__item__heading">
+                                      <h4
+                                          class="layout-holder__content__body__form__holder__section__area__block__list__item__heading__title">
+                                          #{{i+1}}</h4>
+                                      <span (click)="removeReward(i)"
+                                          class="layout-holder__content__body__form__holder__section__area__block__list__item__heading__remove icon-times"></span>
+                                  </div>
+                                  <div class="row">
+                                      <div class="col-lg-8">
+                                          <div class="input-wrapper m-b-20">
+                                              <label class="input-label">Fəxri adın təsviri</label>
+                                              <input type="text" class="input-control"
+                                                  placeholder="Fəxri adın təsviri" formControlName='name'>
+                                          </div>
+                                      </div>
+                                      <div class="col-lg-4">
+                                          <div class="input-wrapper m-b-20">
+                                              <label class="input-label">Tarix</label>
+                                              <mat-form-field appearance="fill" class="input-control">
+                                                <input matInput [matDatepicker]="reward_i" (click)="reward_i.open()"
+                                                  (keydown)="false" placeholder="Tarix" formControlName='date' (dateChange)='changeDateFormat($event.target.value, 3, i)'>
+                                                <mat-datepicker-toggle matSuffix [for]="reward_i"></mat-datepicker-toggle>
+                                                <mat-datepicker #reward_i disabled="false"></mat-datepicker>
+                                              </mat-form-field>
+                                          </div>
+                                      </div>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-fluid btn-transparent" (click)='addReward()'>Əlavə et</button>
+                    </div>
+                </div>
+            </div>
+            <div class="layout-holder__content__body__form__holder__section">
+                <h2 class="layout-holder__content__body__form__holder__section__title">Şəhidin övladları
+                    haqqında məlumat</h2>
+                <div class="layout-holder__content__body__form__holder__section__area">
+
+                    <div class="layout-holder__content__body__form__holder__section__area__block">
+                        <div class="layout-holder__content__body__form__holder__section__area__block__list" formArrayName='children'>
+                            <div *ngFor="let child of children.controls; let i=index"
+                                class="layout-holder__content__body__form__holder__section__area__block__list__item">
+                                <div [formGroupName]='i'>
+                                  <div
+                                      class="layout-holder__content__body__form__holder__section__area__block__list__item__heading">
+                                      <h4
+                                          class="layout-holder__content__body__form__holder__section__area__block__list__item__heading__title">
+                                          #{{i+1}}</h4>
+                                      <span (click)="removeChild(i)"
+                                          class="layout-holder__content__body__form__holder__section__area__block__list__item__heading__remove icon-times"></span>
+                                  </div>
+                                  <div class="row">
+                                      <div class="col-lg-12">
+                                          <div class="input-wrapper m-b-20">
+                                              <label class="input-label">Cinsi</label>
+                                              <div
+                                                  class="layout-holder__content__body__form__holder__section__area">
+                                                  <div class="radio-group">
+                                                      <label for="genderChildrenType-{{i}}" class="radio">
+                                                          <input type="radio" formControlName='gender'
+                                                              id="genderChildrenType-{{i}}" value='1'>
+                                                          <span class="radio-control"></span>
+                                                          <span class="radio-label">Kişi</span>
+                                                      </label>
+                                                      <label for="genderChildrenType2-{{i}}" class="radio">
+                                                          <input type="radio" formControlName='gender'
+                                                              id="genderChildrenType2-{{i}}" value='2'>
+                                                          <span class="radio-control"></span>
+                                                          <span class="radio-label">Qadın</span>
+                                                      </label>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                      <div class="col-lg-6">
+                                          <div class="input-wrapper m-b-20">
+                                              <label class="input-label">Adı</label>
+                                              <input type="text" class="input-control" placeholder="Adı" formControlName='name'>
+                                          </div>
+                                      </div>
+                                      <div class="col-lg-6">
+                                          <div class="input-wrapper m-b-20">
+                                              <label class="input-label">Soyadı</label>
+                                              <input type="text" class="input-control" placeholder="Soyadı" formControlName='surname'>
+                                          </div>
+                                      </div>
+                                      <div class="col-lg-6">
+                                          <div class="input-wrapper m-b-20">
+                                              <label class="input-label">Fin kod</label>
+                                              <input type="text" class="input-control" placeholder="Fin kod" formControlName='fin'>
+                                          </div>
+                                      </div>
+                                      <div class="col-lg-6">
+                                          <div class="input-wrapper m-b-20">
+                                              <label class="input-label">Doğum tarixi</label>
+                                              <mat-form-field appearance="fill" class="input-control">
+                                                <input matInput [matDatepicker]="childBirth_i" (click)="childBirth_i.open()" (keydown)="false"
+                                                  placeholder="Doğum tarixi" formControlName='birthdate' (dateChange)='changeDateFormat($event.target.value, 2, i)'>
+                                                <mat-datepicker-toggle matSuffix [for]="childBirth_i"></mat-datepicker-toggle>
+                                                <mat-datepicker #childBirth_i disabled="false"></mat-datepicker>
+                                              </mat-form-field>
+                                          </div>
+                                      </div>
+                                      <div class="col-lg-12">
+                                          <div class="input-wrapper m-b-20 ">
+                                              <label for="" class="input-label">Şəxsiyyət vəsiqəsinin şəkili
+                                                  (yalnız
+                                                  ön tərəf)</label>
+                                              <div class="fileupload">
+                                                  <span class="fileupload-placeholder">Fayl</span>
+                                                  <label for="fileIdentityPhotoId-{{i}}"
+                                                      class="fileupload-button btn btn-small btn-primary">Yüklə<input
+                                                          id="fileIdentityPhotoId-{{i}}" type="file"  (change)='documentUpload($event, 2, i)'></label>
+                                              </div>
+                                              <div class="fileupload-list">
+                                                  <div class="fileupload-file" *ngIf="children.value[i].identityPhotoId">
+                                                      <span class="fileupload-file__remove icon-times" (click)='removePhoto(2, i)'></span>
+                                                      <span class="fileupload-file__name">photo</span>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <button class="btn btn-fluid btn-transparent" (click)="addChild()">Əlavə et</button>
+                    </div>
+                </div>
+            </div>
+            <div class="layout-holder__content__body__form__holder__section">
+                <h2 class="layout-holder__content__body__form__holder__section__title">Ailə üzvlərinin
+                    mülkiyyətində olan mənzil və ya fərdi evi haqqında məlumat</h2>
+                <div class="layout-holder__content__body__form__holder__section__area">
+                    <div class="layout-holder__content__body__form__holder__section__area__block">
+                        <div class="layout-holder__content__body__form__holder__section__area__block__list" formArrayName='apartments'>
+                            <div *ngFor="let apartment of apartments.controls; let i=index"
+                                class="layout-holder__content__body__form__holder__section__area__block__list__item">
+                                <div [formGroupName]='i'>
+                                  <div
+                                      class="layout-holder__content__body__form__holder__section__area__block__list__item__heading">
+                                      <h4
+                                          class="layout-holder__content__body__form__holder__section__area__block__list__item__heading__title">
+                                          #{{i+1}}</h4>
+                                      <span (click)="removeApartment(i)"
+                                          class="layout-holder__content__body__form__holder__section__area__block__list__item__heading__remove icon-times"></span>
+                                  </div>
+                                  <h3
+                                      class="layout-holder__content__body__form__holder__section__area__title">
+                                      Mənzil və ya fərdi evin əsas məlumatları</h3>
+                                  <div class="row">
+                                      <div class="col-lg-12">
+                                          <div class="radio-group m-b-20">
+                                              <label for="hasDocumentYes-{{i}}" class="radio">
+                                                  <input type="radio" id="hasDocumentYes-{{i}}" formControlName='hasDocument'
+                                                      value=true>
+                                                  <span class="radio-control"></span>
+                                                  <span class="radio-label">Sənədli</span>
+                                              </label>
+                                              <label for="hasDocumentNo-{{i}}" class="radio">
+                                                  <input type="radio" id="hasDocumentNo-{{i}}" formControlName='hasDocument'
+                                                      value=false>
+                                                  <span class="radio-control"></span>
+                                                  <span class="radio-label">Sənədsiz</span>
+                                              </label>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="col-lg-4">
+                                          <div class="input-wrapper m-b-20">
+                                              <label class="input-label">Yaşayan şəxslərin sayı</label>
+                                              <input type="text" class="input-control" placeholder="Say" formControlName='peopleCount'>
+                                          </div>
+                                      </div>
+                                      <div class="col-lg-4">
+                                          <div class="input-wrapper m-b-20">
+                                              <label class="input-label">Ümumi sahəsi (kV)</label>
+                                              <input type="text" class="input-control" placeholder="Sahə" formControlName='totalArea'>
+                                          </div>
+                                      </div>
+                                      <div class="col-lg-4">
+                                          <div class="input-wrapper m-b-20">
+                                              <label class="input-label">Otaq sayı</label>
+                                              <input type="text" class="input-control" placeholder="Say" formControlName='roomCount'>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <h3
+                                      class="layout-holder__content__body__form__holder__section__area__title">
+                                      Mənzil və ya fərdi evin şəkilləri</h3>
+                                  <div class="row">
+                                      <div class="col-12">
+                                          <div class="input-wrapper m-b-20 ">
+                                              <div class="fileupload">
+                                                  <span class="fileupload-placeholder">Fayl</span>
+                                                  <label for="fileApartmentPhotoId-{{i}}"
+                                                      class="fileupload-button btn btn-small btn-primary">Yüklə<input
+                                                          id="fileApartmentPhotoId-{{i}}" multiple type="file"  (change)='documentUpload($event, 3, i)'></label>
+                                              </div>
+                                              <div class="fileupload-list">
+                                                  <div class="fileupload-file" *ngFor="let photo of apartments.value[i].photos; let k = index">
+                                                    <ng-container *ngIf="photo.photoId !== ''">
+                                                      <span class="fileupload-file__remove icon-times" (click)='removePhoto(3, i, k)'></span>
+                                                      <span class="fileupload-file__name">photo {{k+1}}</span>
+                                                    </ng-container>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <button type="button" class="btn btn-fluid btn-transparent" (click)="addApartment()">Mənzil əlavə et</button>
+            </div>
+          </form>
+        </div>
+        <div class="layout-holder__content__body__form__footer">
+            <button class="btn btn-fluid btn-primary" [disabled]='martyrForm.invalid' (click)="submitForm()">GÖNDƏR</button>
+        </div>
+    </div>
+</div>
